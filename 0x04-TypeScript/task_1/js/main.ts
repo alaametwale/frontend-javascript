@@ -4,13 +4,13 @@ interface Teacher {
   fullTimeEmployee: boolean;
   yearsOfExperience?: number;
   location: string;
-  [key: string]: any; // يسمح بإضافة خصائص إضافية مثل contract
+  [key: string]: any;
 }
 
 const teacher3: Teacher = {
   firstName: 'John',
-  lastName: 'Doe',
   fullTimeEmployee: false,
+  lastName: 'Doe',
   location: 'London',
   contract: false,
 };
