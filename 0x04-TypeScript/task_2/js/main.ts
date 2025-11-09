@@ -1,47 +1,84 @@
-// Director & Teacher Interfaces
-interface DirectorInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workDirectorTasks(): string;
+// الواجهات الأساسية (المفترضة من المهام السابقة)
+interface Teacher {
+    // طرق العمل المفترضة
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    // الطريقة المحددة للمعلم (للتفريق في executeWork)
+    workTeacherTasks(): string;
+    salary: number; // إضافة خاصية الراتب لتسهيل المصنع
 }
 
-interface TeacherInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workTeacherTasks(): string;
+interface Director extends Teacher {
+    numberOfReports: number;
+    // الطريقة المحددة للمدير (للتفريق في executeWork)
+    workDirectorTasks(): string;
 }
 
-// Classes
-class Director implements DirectorInterface {
-  workFromHome(): string { return "Working from home"; }
-  getCoffeeBreak(): string { return "Getting a coffee break"; }
-  workDirectorTasks(): string { return "Getting to director tasks"; }
+// دالة المصنع لإنشاء الموظف بناءً على الراتب
+// تُستخدم هنا للتأكد من أن المدير يمتلك workDirectorTasks والمعلم لا يمتلكها (بشكل مباشر)
+function createEmployee(salary: number): Teacher | Director {
+    // الدوال الأساسية المشتركة
+    const baseMethods = {
+        workFromHome: () => salary < 500 ? 'Cannot do from home' : 'Working from home',
+        getCoffeeBreak: () => 'Getting a coffee break',
+        workTeacherTasks: () => 'Getting to work', // النتيجة المتوقعة للمعلم
+    };
+
+    if (salary < 500) {
+        // إرجاع كائن المعلم
+        return {
+            ...baseMethods,
+            salary,
+        } as Teacher;
+    } else {
+        // إرجاع كائن المدير
+        return {
+            ...baseMethods,
+            salary,
+            numberOfReports: 10,
+            workDirectorTasks: () => 'Getting to director tasks', // النتيجة المتوقعة للمدير
+        } as Director;
+    }
 }
 
-class Teacher implements TeacherInterface {
-  workFromHome(): string { return "Cannot work from home"; }
-  getCoffeeBreak(): string { return "Cannot have a break"; }
-  workTeacherTasks(): string { return "Getting to work"; }
+// -----------------------------------------------------------
+// 6. إنشاء وظائف خاصة بالموظفين (المطلوب)
+// -----------------------------------------------------------
+
+/**
+ * دالة مسند النوع (Type Predicate) للتحقق مما إذا كان الموظف مديرًا.
+ * التحقق يتم من خلال وجود الخاصية الفريدة للمدير workDirectorTasks.
+ * @param employee كائن الموظف (Teacher أو Director).
+ * @returns True إذا كان الكائن يطابق بنية المدير (Director).
+ */
+function isDirector(employee: Teacher | Director): employee is Director {
+    // التحقق من وجود workDirectorTasks في الكائن
+    return (employee as Director).workDirectorTasks !== undefined;
 }
 
-// Create Employee
-function createEmployee(salary: number | string): Director | Teacher {
-  const numericSalary = typeof salary === "string" ? parseInt(salary) : salary;
-  return numericSalary < 500 ? new Teacher() : new Director();
+/**
+ * تنفذ دالة العمل المناسبة بناءً على نوع الموظف.
+ * @param employee كائن الموظف.
+ * @returns نتيجة استدعاء دالة العمل.
+ */
+function executeWork(employee: Teacher | Director): string {
+    if (isDirector(employee)) {
+        // إذا كان مديرًا، استدعِ دالة المدير
+        return employee.workDirectorTasks();
+    }
+    // وإلا (معلم)، استدعِ دالة المعلم
+    return employee.workTeacherTasks();
 }
 
-// Exported Functions
-export function isDirector(employee: Director | Teacher): employee is Director {
-  return (employee as Director).workDirectorTasks !== undefined;
-}
+// -----------------------------------------------------------
+// اختبار النتائج المتوقعة
+// -----------------------------------------------------------
 
-export function executeWork(employee: Director | Teacher): string {
-  if (isDirector(employee)) {
-    return employee.workDirectorTasks();
-  }
-  return employee.workTeacherTasks();
-}
+console.log(`تنفيذ العمل للموظف ذو الراتب 200: ${executeWork(createEmployee(200))}`); // النتيجة المتوقعة: Getting to work
+console.log(`تنفيذ العمل للموظف ذو الراتب 1000: ${executeWork(createEmployee(1000))}`); // النتيجة المتوقعة: Getting to director tasks
 
-// Test
-console.log(executeWork(createEmployee(200)));
-console.log(executeWork(createEmployee(1000)));
+const employee1 = createEmployee(200);
+const employee2 = createEmployee(1000);
+
+console.log(`هل الموظف ذو الراتب 200 مدير؟ ${isDirector(employee1)}`); // النتيجة المتوقعة: false
+console.log(`هل الموظف ذو الراتب 1000 مدير؟ ${isDirector(employee2)}`); // النتيجة المتوقعة: true
