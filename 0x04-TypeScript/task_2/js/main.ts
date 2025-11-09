@@ -36,4 +36,41 @@ export class TeacherClass implements Teacher {
     return "Cannot have a break";
   }
   workTeacherTasks(): string {
-    return "Getting to wor
+    return "Getting to work";
+  }
+}
+
+// =======================================
+// createEmployee function
+// =======================================
+export function createEmployee(salary: number | string): Teacher | Director {
+  if (typeof salary === "number" && salary < 500) {
+    return new TeacherClass();
+  }
+  return new DirectorClass();
+}
+
+// =======================================
+// Functions specific to employees
+// =======================================
+export function isDirector(employee: Teacher | Director): employee is Director {
+  return (employee as Director).workDirectorTasks !== undefined;
+}
+
+export function executeWork(employee: Teacher | Director): string {
+  if (isDirector(employee)) {
+    return employee.workDirectorTasks();
+  } else {
+    return employee.workTeacherTasks();
+  }
+}
+
+// =======================================
+// String literal types
+// =======================================
+export type Subjects = "Math" | "History";
+
+export function teachClass(todayClass: Subjects): string {
+  if (todayClass === "Math") return "Teaching Math";
+  return "Teaching History";
+}
