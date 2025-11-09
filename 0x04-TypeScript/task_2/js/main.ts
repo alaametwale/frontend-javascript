@@ -1,22 +1,22 @@
-// =================================================================
-// 1️⃣ DirectorInterface & TeacherInterface
-// =================================================================
-interface DirectorInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workDirectorTasks(): string;
-}
-
-interface TeacherInterface {
+// =======================================
+// Interfaces
+// =======================================
+export interface Teacher {
   workFromHome(): string;
   getCoffeeBreak(): string;
   workTeacherTasks(): string;
 }
 
-// =================================================================
-// 2️⃣ Classes Director & Teacher
-// =================================================================
-class Director implements DirectorInterface {
+export interface Director {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workDirectorTasks(): string;
+}
+
+// =======================================
+// Classes
+// =======================================
+export class DirectorClass implements Director {
   workFromHome(): string {
     return "Working from home";
   }
@@ -28,7 +28,7 @@ class Director implements DirectorInterface {
   }
 }
 
-class Teacher implements TeacherInterface {
+export class TeacherClass implements Teacher {
   workFromHome(): string {
     return "Cannot work from home";
   }
@@ -40,36 +40,16 @@ class Teacher implements TeacherInterface {
   }
 }
 
-// =================================================================
-// 3️⃣ Function createEmployee
-// =================================================================
-function createEmployee(salary: number | string): Director | Teacher {
-  const numericSalary = typeof salary === "string" ? parseInt(salary) : salary;
-
-  if (numericSalary < 500) {
-    return new Teacher();
-  } else {
-    return new Director();
+// =======================================
+// createEmployee function
+// =======================================
+export function createEmployee(salary: number | string): Teacher | Director {
+  if (typeof salary === "number" && salary < 500) {
+    return new TeacherClass();
   }
+  return new DirectorClass();
 }
 
-// =================================================================
-// 4️⃣ Type predicate (isDirector)
-// =================================================================
-function isDirector(employee: Director | Teacher): employee is Director {
-  return (employee as Director).workDirectorTasks !== undefined;
-}
-
-// =================================================================
-// 5️⃣ executeWork function
-// =================================================================
-function executeWork(employee: Director | Teacher): string {
-  if (isDirector(employee)) {
-    return employee.workDirectorTasks();
-  }
-  return employee.workTeacherTasks();
-}
-
-// ✅ Expected result test
-console.log(executeWork(createEmployee(200)));  // Getting to work
-console.log(executeWork(createEmployee(1000))); // Getting to director tasks
+// =======================================
+// Functions specific to employees
+// ================================
