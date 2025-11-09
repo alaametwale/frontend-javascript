@@ -1,4 +1,4 @@
-// الواجهات الأساسية (المفترضة من المهام السابقة)
+// الواجهات الأساسية
 interface Teacher {
     // طرق العمل المفترضة
     workFromHome(): string;
@@ -15,8 +15,8 @@ interface Director extends Teacher {
 }
 
 // دالة المصنع لإنشاء الموظف بناءً على الراتب
-// تُستخدم هنا للتأكد من أن المدير يمتلك workDirectorTasks والمعلم لا يمتلكها (بشكل مباشر)
-function createEmployee(salary: number): Teacher | Director {
+// **تم إضافة export هنا**
+export function createEmployee(salary: number): Teacher | Director {
     // الدوال الأساسية المشتركة
     const baseMethods = {
         workFromHome: () => salary < 500 ? 'Cannot do from home' : 'Working from home',
@@ -47,12 +47,12 @@ function createEmployee(salary: number): Teacher | Director {
 
 /**
  * دالة مسند النوع (Type Predicate) للتحقق مما إذا كان الموظف مديرًا.
- * التحقق يتم من خلال وجود الخاصية الفريدة للمدير workDirectorTasks.
  * @param employee كائن الموظف (Teacher أو Director).
  * @returns True إذا كان الكائن يطابق بنية المدير (Director).
  */
-function isDirector(employee: Teacher | Director): employee is Director {
-    // التحقق من وجود workDirectorTasks في الكائن
+// **تم إضافة export هنا**
+export function isDirector(employee: Teacher | Director): employee is Director {
+    // نتحقق من وجود الخاصية workDirectorTasks الفريدة للمدير
     return (employee as Director).workDirectorTasks !== undefined;
 }
 
@@ -61,7 +61,8 @@ function isDirector(employee: Teacher | Director): employee is Director {
  * @param employee كائن الموظف.
  * @returns نتيجة استدعاء دالة العمل.
  */
-function executeWork(employee: Teacher | Director): string {
+// **تم إضافة export هنا**
+export function executeWork(employee: Teacher | Director): string {
     if (isDirector(employee)) {
         // إذا كان مديرًا، استدعِ دالة المدير
         return employee.workDirectorTasks();
@@ -71,14 +72,18 @@ function executeWork(employee: Teacher | Director): string {
 }
 
 // -----------------------------------------------------------
-// اختبار النتائج المتوقعة
+// اختبار النتائج المتوقعة (الاختبارات لا تحتاج إلى تصدير)
 // -----------------------------------------------------------
 
-console.log(`تنفيذ العمل للموظف ذو الراتب 200: ${executeWork(createEmployee(200))}`); // النتيجة المتوقعة: Getting to work
-console.log(`تنفيذ العمل للموظف ذو الراتب 1000: ${executeWork(createEmployee(1000))}`); // النتيجة المتوقعة: Getting to director tasks
+console.log(`تنفيذ العمل للموظف ذو الراتب 200: ${executeWork(createEmployee(200))}`); 
+// النتيجة المتوقعة: Getting to work
+console.log(`تنفيذ العمل للموظف ذو الراتب 1000: ${executeWork(createEmployee(1000))}`); 
+// النتيجة المتوقعة: Getting to director tasks
 
 const employee1 = createEmployee(200);
 const employee2 = createEmployee(1000);
 
-console.log(`هل الموظف ذو الراتب 200 مدير؟ ${isDirector(employee1)}`); // النتيجة المتوقعة: false
-console.log(`هل الموظف ذو الراتب 1000 مدير؟ ${isDirector(employee2)}`); // النتيجة المتوقعة: true
+console.log(`هل الموظف ذو الراتب 200 مدير؟ ${isDirector(employee1)}`); 
+// النتيجة المتوقعة: false
+console.log(`هل الموظف ذو الراتب 1000 مدير؟ ${isDirector(employee2)}`); 
+// النتيجة المتوقعة: true
