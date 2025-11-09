@@ -36,20 +36,4 @@ export class TeacherClass implements Teacher {
     return "Cannot have a break";
   }
   workTeacherTasks(): string {
-    return "Getting to work";
-  }
-}
-
-// =======================================
-// createEmployee function
-// =======================================
-export function createEmployee(salary: number | string): Teacher | Director {
-  if (typeof salary === "number" && salary < 500) {
-    return new TeacherClass();
-  }
-  return new DirectorClass();
-}
-
-// =======================================
-// Functions specific to employees
-// ================================
+    return "Getting to wor
