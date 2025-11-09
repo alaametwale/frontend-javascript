@@ -74,3 +74,8 @@ export function teachClass(todayClass: Subjects): string {
   if (todayClass === "Math") return "Teaching Math";
   return "Teaching History";
 }
+// ====== اختبار سريع ======
+console.log(executeWork(createEmployee(200)));   // يجب أن يطبع: Getting to work
+console.log(executeWork(createEmployee(1000)));  // يجب أن يطبع: Getting to director tasks
+console.log(teachClass("Math"));                 // يجب أن يطبع: Teaching Math
+console.log(teachClass("History"));              // يجب أن يطبع: Teaching History
