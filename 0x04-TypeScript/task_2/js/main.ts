@@ -60,22 +60,26 @@ export function isDirector(employee: Teacher | Director): employee is Director {
 export function executeWork(employee: Teacher | Director): string {
   if (isDirector(employee)) {
     return employee.workDirectorTasks();
-  } else {
-    return employee.workTeacherTasks();
   }
+  return employee.workTeacherTasks();
 }
 
 // =======================================
-// String literal types
+// String literal types (Point 7)
 // =======================================
 export type Subjects = "Math" | "History";
 
 export function teachClass(todayClass: Subjects): string {
-  if (todayClass === "Math") return "Teaching Math";
+  if (todayClass === "Math") {
+    return "Teaching Math";
+  }
   return "Teaching History";
 }
-// ====== اختبار سريع ======
-console.log(executeWork(createEmployee(200)));   // يجب أن يطبع: Getting to work
-console.log(executeWork(createEmployee(1000)));  // يجب أن يطبع: Getting to director tasks
-console.log(teachClass("Math"));                 // يجب أن يطبع: Teaching Math
-console.log(teachClass("History"));              // يجب أن يطبع: Teaching History
+
+// =======================================
+// Optional: quick test (can be removed later)
+// =======================================
+console.log(executeWork(createEmployee(200)));   // Getting to work
+console.log(executeWork(createEmployee(1000)));  // Getting to director tasks
+console.log(teachClass("Math"));                 // Teaching Math
+console.log(teachClass("History"));              // Teaching History
